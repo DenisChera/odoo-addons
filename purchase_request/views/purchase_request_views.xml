@@ -1,0 +1,108 @@
+<odoo>
+    <!-- TREE VIEW -->
+    <record id="view_purchase_request_tree" model="ir.ui.view">
+        <field name="name">purchase.request.tree</field>
+        <field name="model">purchase.request</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state == 'approved'"
+                  decoration-danger="state == 'rejected'"
+                  decoration-info="state == 'submitted'">
+                <field name="name"/>
+                <field name="product_name"/>
+                <field name="quantity"/>
+                <field name="estimated_price"/>
+                <field name="total_value"/>
+                <field name="requester_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_purchase_request_form" model="ir.ui.view">
+        <field name="name">purchase.request.form</field>
+        <field name="model">purchase.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit"
+                            string="Trimite"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve"
+                            string="Aproba"
+                            type="object"
+                            class="btn-success"
+                            groups="purchase_request.group_purchase_manager"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_reject"
+                            string="Respinge"
+                            type="object"
+                            class="btn-danger"
+                            groups="purchase_request.group_purchase_manager"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_reset_draft"
+                            string="Resetare Draft"
+                            type="object"
+                            invisible="state not in ['rejected']"/>
+                    <button name="action_convert_currency"
+                            string="Converteste Valuta"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state == 'draft'"/>
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,submitted,approved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Informatii Generale">
+                            <field name="name" readonly="1"/>
+                            <field name="requester_id"/>
+                            <field name="product_name" readonly="state != 'draft'"/>
+                            <field name="reason" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Detalii Financiare">
+                            <field name="quantity" readonly="state != 'draft'"/>
+                            <field name="estimated_price" readonly="state != 'draft'"/>
+                            <field name="total_value"/>
+                        </group>
+                        <group string="Conversie Valuta" invisible="value_eur == 0">
+                            <field name="value_eur"/>
+                            <field name="value_usd"/>
+                        </group>
+                    </group>
+                    <group invisible="state != 'rejected'">
+                        <field name="reject_reason" readonly="state != 'submitted'"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_purchase_request" model="ir.actions.act_window">
+        <field name="name">Cereri Achizitie</field>
+        <field name="res_model">purchase.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- MENU -->
+    <menuitem
+        id="menu_purchase_request_root"
+        name="Purchase Request"
+        sequence="95"/>
+
+    <menuitem
+        id="menu_purchase_request_list"
+        name="Cereri Achizitie"
+        parent="menu_purchase_request_root"
+        action="action_purchase_request"
+        sequence="10"/>
+</odoo>

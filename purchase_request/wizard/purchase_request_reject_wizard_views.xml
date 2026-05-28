@@ -1,0 +1,30 @@
+<odoo>
+    <record id="view_purchase_request_reject_wizard" model="ir.ui.view">
+        <field name="name">purchase.request.reject.wizard.form</field>
+        <field name="model">purchase.request.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Motiv Respingere">
+                <group>
+                    <field name="reject_reason" 
+                           placeholder="Introduce motivul respingerii..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm_reject"
+                            string="Confirma Respingere"
+                            type="object"
+                            class="btn-danger"/>
+                    <button string="Anuleaza"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_purchase_request_reject_wizard" model="ir.actions.act_window">
+        <field name="name">Respinge Cerere</field>
+        <field name="res_model">purchase.request.reject.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
